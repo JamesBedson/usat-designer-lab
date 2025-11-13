@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# === CONFIGURATION ===
+PROJECT_ID=$(gcloud config get-value project)
+BUCKET_NAME="usat_decodings"
+SERVICE_ACCOUNT_NAME="batch-uploader"
+REGION="us-central1"
+KEY_FILE="key.json"
+GCS_ROLE="roles/storage.objectAdmin"
+SERVICE_ACCOUNT_EMAIL="$SERVICE_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+
+echo "🔧 Using project: $PROJECT_ID"
+echo "🔧 Bucket: $BUCKET_NAME"
+echo "🔧 Service Account: $SERVICE_ACCOUNT_EMAIL"
+
+# === 1. Create GCS bucket if it doesn't exist ===
+if gsutil ls -b gs://$BUCKET_NAME > /dev/null 2>&1; then
+  echo "✅ Bucket already exists: gs://$BUCKET_NAME"
+else
+  echo "📦 Creating bucket: gs://$BUCKET_NAME"
+  gsutil mb -l $REGION gs://$BUCKET_NAME
+fi
+
+# === 2. Create the service account ===
+if gcloud iam service-accounts describe $SERVICE_ACCOUNT_EMAIL > /dev/null 2>&1; then
+  echo "✅ Service account already exists: $SERVICE_ACCOUNT_EMAIL"
+else
+  echo "👤 Creating service account: $SERVICE_ACCOUNT_NAME"
+  gcloud iam service-accounts create $SERVICE_ACCOUNT_NAME \
+    --description="Uploads batch outputs to GCS" \
+    --display-name="Batch Uploader"
+fi
+
+# === 3. Grant permission to upload to the bucket ===
+echo "🔐 Granting $GCS_ROLE to $SERVICE_ACCOUNT_EMAIL on bucket $BUCKET_NAME"
+gcloud storage buckets add-iam-policy-binding gs://$BUCKET_NAME \
+  --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
+  --role="$GCS_ROLE" \
+  --quiet
+
+# === 4. Create a local key file ===
+if [[ -f $KEY_FILE ]]; then
+  echo "🗝️  Key file already exists: $KEY_FILE"
+else
+  echo "⏳ Waiting for service account to be fully available..."
+  sleep 10  # Wait 10 seconds to allow service account creation to propagate
+
+  echo "🔑 Creating new key file: $KEY_FILE"
+  gcloud iam service-accounts keys create $KEY_FILE \
+    --iam-account=$SERVICE_ACCOUNT_EMAIL
+fi
+
+# === 5. Set local environment variable ===
+echo "💻 To use this key locally, run:"
+echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$(pwd)/$KEY_FILE\""
+echo ""
+echo "✅ Setup complete."
