@@ -1,0 +1,6 @@
+[submodule "universal_transcoder"]
+	path = universal_transcoder
+	url = git@github.com:JamesBedson/universal_transcoder.git
+[submodule "randspk"]
+	path = randspk
+	url = git@github.com:JamesBedson/randspk.git
