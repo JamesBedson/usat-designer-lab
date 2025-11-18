@@ -1,6 +1,3 @@
-[submodule "randspk"]
-	path = randspk
-	url = git@github.com:JamesBedson/randspk.git
 [submodule "usat-designer-common"]
 	path = usat-designer-common
 	url = git@github.com:JamesBedson/usat-designer-common.git
