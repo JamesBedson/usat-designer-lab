@@ -1,0 +1,12 @@
+# Parameter Sampling
+DSN_SMPL_DISTRIBUTION_ARGS      = "Args"
+DSN_SMPL_DISTRIBUTION           = "Distribution"
+DSN_SMPL_INPUT_FORMAT           = "InputFormat"
+DSN_SMPL_OUTPUT_FORMAT          = "OutputFormat"
+DSN_SMPL_FORMAT_CHOICES         = "FormatChoices"
+DSN_SMPL_INPUT_LAYOUT_DESC      = "InputLayoutDescription"
+DSN_SMPL_OUTPUT_LAYOUT_DESC     = "OutputLayoutDescription"
+DSN_SMPL_QUALITY_SCORE          = "quality_score"
+DSN_SMPL_APPARENT_SOURCE_WIDTH  = "median_source_width"
+DSN_SMPL_SEED                   = "seed"
+DSN_SMPL_P                      = "P"
