@@ -1,3 +1,6 @@
 [submodule "usat-designer-common"]
 	path = usat-designer-common
 	url = git@github.com:JamesBedson/usat-designer-common.git
+[submodule "parameter_sampling/randspk"]
+	path = parameter_sampling/randspk
+	url = git@github.com:JamesBedson/randspk.git
